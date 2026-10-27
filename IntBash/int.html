@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bash scripting para principiantes</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: system-ui, sans-serif;
+      line-height: 1.6;
+      color: #20242a;
+      background: #f4f6f8;
+    }
+
+    body {
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem;
+    }
+
+    header, section {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+      box-shadow: 0 2px 12px #17212b12;
+    }
+
+    h1, h2 { color: #173b57; }
+    h1 { line-height: 1.2; }
+
+    code {
+      background: #edf1f4;
+      border-radius: 4px;
+      padding: 0.1rem 0.35rem;
+    }
+
+    pre {
+      overflow-x: auto;
+      padding: 1rem;
+      border-radius: 8px;
+      background: #17212b;
+      color: #f2f5f7;
+    }
+
+    pre code { background: none; padding: 0; }
+
+    .nota {
+      border-left: 4px solid #3282b8;
+      padding: 0.75rem 1rem;
+      background: #eef7fc;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Bash scripting para principiantes</h1>
+    <p>Aprende a crear pequeños programas que ejecutan comandos automáticamente en una terminal.</p>
+  </header>
+
+  <main>
+    <section>
+      <h2>¿Qué es Bash?</h2>
+      <p>
+        Bash es un intérprete de comandos habitual en Linux y macOS.
+        Un script de Bash es un archivo de texto con comandos que Bash ejecuta
+        en orden. Sirve para automatizar tareas repetitivas, como organizar
+        archivos o crear copias de seguridad.
+      </p>
+    </section>
+
+    <section>
+      <h2>Tu primer script</h2>
+      <p>Crea un archivo llamado <code>saludo.sh</code> con este contenido:</p>
+      <pre><code>#!/usr/bin/env bash
+echo "¡Hola! Este es mi primer script."</code></pre>
+
+      <p>La primera línea indica que el script debe ejecutarse con Bash. Para ejecutarlo:</p>
+      <pre><code>chmod +x saludo.sh
+./saludo.sh</code></pre>
+      <p>También puedes ejecutarlo directamente con <code>bash saludo.sh</code>.</p>
+    </section>
+
+    <section>
+      <h2>Variables</h2>
+      <p>Una variable guarda un valor. No pongas espacios alrededor de <code>=</code>:</p>
+      <pre><code>nombre="Ana"
+echo "Hola, $nombre"</code></pre>
+      <p>Usa comillas alrededor de las variables para manejar mejor los espacios:</p>
+      <pre><code>archivo="mis documentos.txt"
+echo "$archivo"</code></pre>
+    </section>
+
+    <section>
+      <h2>Leer información</h2>
+      <p><code>read</code> espera a que la persona escriba una respuesta:</p>
+      <pre><code>#!/usr/bin/env bash
+
+echo "¿Cómo te llamas?"
+read -r nombre
+echo "¡Hola, $nombre!"</code></pre>
+      <p>La opción <code>-r</code> evita que Bash interprete las barras invertidas como caracteres especiales.</p>
+    </section>
+
+    <section>
+      <h2>Condiciones</h2>
+      <p>Con <code>if</code> puedes ejecutar acciones distintas según una condición:</p>
+      <pre><code>#!/usr/bin/env bash
+
+read -r -p "Escribe un número: " numero
+
+if [ "$numero" -gt 10 ]; then
+  echo "Es mayor que 10."
+else
+  echo "Es 10 o menor."
+fi</code></pre>
+      <p><code>-gt</code> significa “mayor que”. Para números también puedes usar <code>-lt</code> (menor que) y <code>-eq</code> (igual a).</p>
+    </section>
+
+    <section>
+      <h2>Bucles</h2>
+      <p>Un bucle <code>for</code> repite instrucciones para cada elemento:</p>
+      <pre><code>for fruta in manzana pera naranja; do
+  echo "Fruta: $fruta"
+done</code></pre>
+    </section>
+
+    <section>
+      <h2>Funciones</h2>
+      <p>Una función reúne comandos para poder reutilizarlos:</p>
+      <pre><code>saludar() {
+  echo "¡Hola, $1!"
+}
+
+saludar "Luis"</code></pre>
+      <p><code>$1</code> representa el primer argumento recibido por la función.</p>
+    </section>
+
+    <section>
+      <h2>Consejos básicos</h2>
+      <ul>
+        <li>Usa nombres claros para los archivos y las variables.</li>
+        <li>Pon las variables entre comillas, por ejemplo: <code>"$nombre"</code>.</li>
+        <li>Prueba el script con datos simples antes de usarlo en archivos importantes.</li>
+        <li>Para mostrar los comandos mientras se ejecutan, puedes usar <code>bash -x script.sh</code>.</li>
+      </ul>
+      <p class="nota">
+        Algunos comandos pueden borrar o cambiar archivos. Revisa cada línea
+        antes de ejecutar un script que hayas encontrado o descargado.
+      </p>
+    </section>
+  </main>
+</body>
+</html>
+
