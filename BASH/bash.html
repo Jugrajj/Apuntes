@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aprende scripting con Bash</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --fondo: #101820;
+      --panel: #182630;
+      --texto: #eaf1f5;
+      --suave: #b5c5cf;
+      --acento: #70dbb2;
+      --codigo: #0b1117;
+      --borde: #344752;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--fondo);
+      color: var(--texto);
+      font: 16px/1.65 system-ui, sans-serif;
+    }
+
+    header {
+      padding: 3rem 1.25rem;
+      text-align: center;
+      background: linear-gradient(135deg, #173a3b, #182630);
+      border-bottom: 1px solid var(--borde);
+    }
+
+    header h1 {
+      margin: 0 0 .5rem;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+    }
+
+    header p {
+      margin: 0;
+      color: var(--suave);
+      font-size: 1.1rem;
+    }
+
+    main {
+      width: min(900px, calc(100% - 2rem));
+      margin: 2rem auto 4rem;
+    }
+
+    nav, section, .aviso {
+      background: var(--panel);
+      border: 1px solid var(--borde);
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    nav a {
+      color: var(--acento);
+      display: inline-block;
+      margin: .2rem .7rem .2rem 0;
+    }
+
+    h2 { margin-top: 0; color: var(--acento); }
+    h3 { margin-bottom: .4rem; }
+    p, li { color: var(--suave); }
+
+    code {
+      color: #f2d58a;
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    }
+
+    pre {
+      overflow-x: auto;
+      padding: 1rem;
+      border-radius: 8px;
+      background: var(--codigo);
+      border: 1px solid var(--borde);
+    }
+
+    pre code {
+      color: #d8e7ee;
+      font-size: .92rem;
+    }
+
+    .aviso {
+      border-left: 4px solid #f2d58a;
+    }
+
+    footer {
+      color: var(--suave);
+      text-align: center;
+      padding: 1.5rem;
+      border-top: 1px solid var(--borde);
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Aprende scripting con Bash</h1>
+    <p>Apuntes prácticos para crear tus primeros scripts</p>
+  </header>
+
+  <main>
+    <nav aria-label="Contenido">
+      <strong>Ir a:</strong>
+      <a href="#primer-script">Primer script</a>
+      <a href="#argumentos">Argumentos</a>
+      <a href="#condiciones">Condiciones</a>
+      <a href="#bucles">Bucles</a>
+      <a href="#funciones">Funciones</a>
+      <a href="#ejercicios">Ejercicios</a>
+    </nav>
+
+    <section>
+      <h2>¿Qué es un script de Bash?</h2>
+      <p>
+        Es un archivo de texto que contiene comandos para que Bash los ejecute
+        en orden. Sirve para automatizar tareas, procesar archivos y combinar
+        programas de la terminal.
+      </p>
+    </section>
+
+    <section id="primer-script">
+      <h2>1. Tu primer script</h2>
+      <p>Crea un archivo llamado <code>hola.sh</code>:</p>
+      <pre><code>#!/usr/bin/env bash
+
+echo "Hola, mundo"</code></pre>
+      <p>Ejecútalo con:</p>
+      <pre><code>bash hola.sh</code></pre>
+      <p>También puedes hacerlo ejecutable:</p>
+      <pre><code>chmod +x hola.sh
+./hola.sh</code></pre>
+      <p>
+        La primera línea, llamada <em>shebang</em>, indica qué intérprete
+        debería ejecutar el archivo.
+      </p>
+    </section>
+
+    <section id="argumentos">
+      <h2>2. Variables y argumentos</h2>
+      <p>Las variables guardan valores. No pongas espacios alrededor de <code>=</code>:</p>
+      <pre><code>nombre="Ada"
+echo "Hola, $nombre"</code></pre>
+
+      <p>Los argumentos se reciben como <code>$1</code>, <code>$2</code>, etc.:</p>
+      <pre><code>#!/usr/bin/env bash
+
+nombre="${1:-mundo}"
+echo "Hola, $nombre"</code></pre>
+      <p>Al ejecutar <code>bash saludo.sh Marta</code>, el script saludará a Marta.</p>
+
+      <ul>
+        <li><code>$1</code>, <code>$2</code>: primer y segundo argumento.</li>
+        <li><code>$#</code>: cantidad de argumentos.</li>
+        <li><code>"$@"</code>: todos los argumentos, conservando cada uno por separado.</li>
+        <li><code>$0</code>: nombre o ruta del script.</li>
+      </ul>
+      <p>Usa comillas en las variables, especialmente cuando contienen rutas: <code>"$nombre"</code>.</p>
+    </section>
+
+    <section id="condiciones">
+      <h2>3. Condiciones y comprobación de archivos</h2>
+      <pre><code>#!/usr/bin/env bash
+
+if [[ $# -ne 1 ]]; then
+  echo "Uso: $0 ARCHIVO" &gt;&amp;2
+  exit 1
+fi
+
+archivo="$1"
+
+if [[ ! -f "$archivo" ]]; then
+  echo "No se encuentra el archivo: $archivo" &gt;&amp;2
+  exit 1
+fi
+
+echo "Archivo válido: $archivo"</code></pre>
+
+      <p>Pruebas comunes dentro de <code>[[ ... ]]</code>:</p>
+      <ul>
+        <li><code>-f "$ruta"</code>: existe y es un archivo normal.</li>
+        <li><code>-d "$ruta"</code>: existe y es una carpeta.</li>
+        <li><code>-e "$ruta"</code>: existe.</li>
+        <li><code>-z "$texto"</code>: el texto está vacío.</li>
+        <li><code>"$a" == "$b"</code>: dos cadenas son iguales.</li>
+      </ul>
+
+      <p>Para comparar números, puedes usar <code>(( ... ))</code>:</p>
+      <pre><code>edad="$1"
+
+if (( edad &gt;= 18 )); then
+  echo "Mayor de edad"
+else
+  echo "Menor de edad"
+fi</code></pre>
+    </section>
+
+    <section id="bucles">
+      <h2>4. Bucles</h2>
+      <h3>Recorrer los argumentos</h3>
+      <pre><code>for argumento in "$@"; do
+  echo "Argumento: $argumento"
+done</code></pre>
+
+      <h3>Recorrer archivos de una carpeta</h3>
+      <pre><code>for archivo in ./*.txt; do
+  [[ -e "$archivo" ]] || continue
+  echo "Encontrado: $archivo"
+done</code></pre>
+
+      <h3>Repetir una acción</h3>
+      <pre><code>contador=1
+
+while (( contador &lt;= 5 )); do
+  echo "$contador"
+  ((contador++))
+done</code></pre>
+    </section>
+
+    <section id="funciones">
+      <h2>5. Funciones</h2>
+      <p>Las funciones agrupan código para poder reutilizarlo:</p>
+      <pre><code>saludar() {
+  local nombre="$1"
+  echo "Hola, $nombre"
+}
+
+saludar "Rita"</code></pre>
+      <p>
+        <code>local</code> limita una variable a esa función. Los argumentos
+        de la función se reciben como <code>$1</code>, <code>$2</code>, etc.
+      </p>
+    </section>
+
+    <section>
+      <h2>6. Entrada y salida</h2>
+      <p>Pedir un dato por teclado:</p>
+      <pre><code>read -r -p "¿Cómo te llamas? " nombre
+echo "Hola, $nombre"</code></pre>
+
+      <p>Guardar en una variable la salida de un comando:</p>
+      <pre><code>fecha=$(date +%F)
+echo "Hoy es $fecha"</code></pre>
+
+      <p>Guardar texto en archivos:</p>
+      <pre><code>echo "inicio del proceso" &gt; registro.txt
+echo "siguiente línea" &gt;&gt; registro.txt</code></pre>
+      <ul>
+        <li><code>&gt;</code> crea o sobrescribe un archivo.</li>
+        <li><code>&gt;&gt;</code> añade contenido al final.</li>
+        <li><code>|</code> pasa la salida de un comando a otro.</li>
+      </ul>
+      <pre><code>grep -i "error" registro.txt | sort</code></pre>
+    </section>
+
+    <section>
+      <h2>7. Errores y salida del script</h2>
+      <p>
+        Por convención, <code>exit 0</code> indica que el script terminó
+        correctamente. Un número distinto de cero suele indicar un error.
+        <code>echo ... &gt;&amp;2</code> muestra un mensaje en la salida de error.
+      </p>
+
+      <pre><code>#!/usr/bin/env bash
+set -euo pipefail
+
+uso() {
+  echo "Uso: $0 ARCHIVO" &gt;&amp;2
+}
+
+if [[ $# -ne 1 ]]; then
+  uso
+  exit 1
+fi
+
+archivo="$1"
+
+if [[ ! -f "$archivo" ]]; then
+  echo "No es un archivo válido: $archivo" &gt;&amp;2
+  exit 1
+fi
+
+echo "Procesando $archivo"</code></pre>
+      <p>
+        <code>set -euo pipefail</code> ayuda a detectar algunos errores,
+        pero no reemplaza las comprobaciones explícitas.
+      </p>
+    </section>
+
+    <section id="ejercicios">
+      <h2>8. Ejercicio: contar líneas</h2>
+      <p>Crea <code>contar.sh</code> para contar las líneas de un archivo:</p>
+      <pre><code>#!/usr/bin/env bash
+
+if [[ $# -ne 1 || ! -f "$1" ]]; then
+  echo "Uso: $0 ARCHIVO" &gt;&amp;2
+  exit 1
+fi
+
+wc -l &lt; "$1"</code></pre>
+
+      <p>Prueba el script:</p>
+      <pre><code>chmod +x contar.sh
+./contar.sh notas.txt</code></pre>
+
+      <h3>Más ejercicios</h3>
+      <ol>
+        <li>Modifica el script para aceptar varios archivos.</li>
+        <li>Haz un script que indique si una ruta es archivo o carpeta.</li>
+        <li>Recorre los archivos <code>.log</code> de una carpeta.</li>
+        <li>Crea una función que imprima un mensaje de bienvenida.</li>
+      </ol>
+    </section>
+
+    <div class="aviso">
+      <strong>Buenas prácticas:</strong>
+      <ul>
+        <li>Pon entre comillas las variables usadas como rutas: <code>"$archivo"</code>.</li>
+        <li>Usa nombres de variables descriptivos.</li>
+        <li>Prueba con archivos de ejemplo antes de procesar datos importantes.</li>
+        <li>Ten cuidado con comandos de borrado y revisa las rutas antes de ejecutarlos.</li>
+      </ul>
+    </div>
+  </main>
+
+  <footer>
+    Apuntes de scripting con Bash
+  </footer>
+</body>
+</html>
+
